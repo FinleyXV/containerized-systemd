@@ -1,0 +1,21 @@
+{
+  "name": "Arch Linux with systemd",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "runArgs": [
+    "--privileged",
+    "--tmpfs", "/run",
+    "--tmpfs", "/run/lock",
+    "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro",
+    "--security-opt", "seccomp=unconfined"
+  ],
+  "overrideCommand": false,
+  "containerUser": "root",
+  "mounts": [
+    "source=/sys/fs/cgroup,target=/sys/fs/cgroup,type=bind,readonly"
+  ],
+  "postStartCommand": "systemctl daemon-reexec || true",
+  "remoteUser": "root"
+}
