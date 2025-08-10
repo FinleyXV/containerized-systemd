@@ -1,17 +1,27 @@
 {
-  "name": "Arch Linux with systemd",
+  "name": "Arch Linux GNOME with systemd and VNC",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
   },
   "runArgs": [
     "--privileged",
-    "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro",
     "--tmpfs", "/run",
-    "--tmpfs", "/run/lock"
+    "--tmpfs", "/run/lock",
+    "-v", "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  ],
+  "mounts": [
+    "source=/sys/fs/cgroup,target=/sys/fs/cgroup,type=bind,readonly"
   ],
   "overrideCommand": false,
   "containerUser": "root",
+  "remoteUser": "root",
   "postStartCommand": "systemctl daemon-reexec || true",
-  "remoteUser": "root"
+  "portsAttributes": {
+    "5900": {
+      "label": "VNC Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "forwardPorts": [5900]
 }
